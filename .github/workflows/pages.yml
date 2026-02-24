@@ -1,0 +1,88 @@
+name: Deploy AI Briefings to Pages
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'briefings/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      
+      - name: Build static site
+        run: |
+          mkdir -p _site
+          cp -r briefings/* _site/
+          
+          # Generate index.html from index.md if exists
+          if [ -f "pages/index.html" ]; then
+            cp pages/* _site/
+          else
+            # Create simple index
+            cat > _site/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <meta charset="UTF-8">
+              <title>AI Daily Briefing</title>
+              <style>
+                  body { font-family: -apple-system, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+                  h1 { color: #333; }
+                  table { width: 100%; border-collapse: collapse; }
+                  th, td { text-align: left; padding: 12px; border-bottom: 1px solid #ddd; }
+                  a { color: #0066cc; text-decoration: none; }
+                  a:hover { text-decoration: underline; }
+              </style>
+          </head>
+          <body>
+              <h1>🤖 AI Daily Briefing</h1>
+              <p>每日 AI 动态简报归档</p>
+              <table>
+                  <tr><th>日期</th><th>链接</th></tr>
+          EOF
+          
+          # Add rows for each briefing
+          for f in $(ls -1 _site/*.md | sort -r | head -30); do
+              date=$(basename $f .md)
+              echo "<tr><td>$date</td><td><a href=\"$date.md\">查看简报</a></td></tr>" >> _site/index.html
+          done
+          
+          cat >> _site/index.html << 'EOF'
+              </table>
+          </body>
+          </html>
+          EOF
+          fi
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
