@@ -1,0 +1,55 @@
+{
+  "fetch_date": "2026-02-24T03:47:00Z",
+  "date_range": {"start": "2026-02-23", "end": "2026-02-24"},
+  "sources": {
+    "openclaw": {
+      "status": "ok",
+      "items": [
+        {
+          "project": "OpenClaw",
+          "version": "v2026.2.22",
+          "title": "OpenClaw 发布更新",
+          "date": "2026-02-22",
+          "summary": "v2026.2.22 发布",
+          "details": "新增 Mistral provider 支持（含 memory embeddings 和 voice）、内置自动更新器、Synology Chat 频道插件、多语言 FTS 优化（西/葡/日/韩/阿拉伯语）",
+          "url": "https://github.com/openclaw/openclaw/releases/tag/v2026.2.22",
+          "category": "opensource"
+        }
+      ]
+    },
+    "anthropic": {
+      "status": "ok",
+      "items": [
+        {
+          "project": "Claude",
+          "title": "Claude Opus 4.6 发布",
+          "date": "2026-02-05",
+          "summary": "Claude Opus 4.6",
+          "details": "在 agentic coding、computer use、tool use、search 和金融领域处于行业领先地位",
+          "url": "https://www.anthropic.com/news/claude-opus-4-6",
+          "category": "product"
+        },
+        {
+          "project": "Anthropic",
+          "title": "Anthropic 完成 300 亿美元 G 轮融资",
+          "date": "2026-02-12",
+          "summary": "300亿美元G轮融资，估值达3800亿美元",
+          "details": "年收入达140亿美元，同比增长超10倍，由 GIC 和 Coatue 领投",
+          "url": "https://www.anthropic.com/news/series-g-funding",
+          "category": "business"
+        }
+      ]
+    }
+  },
+  "stats": {
+    "product": 1,
+    "product_highlight": "Claude Opus 4.6",
+    "business": 1,
+    "business_highlight": "Anthropic 300亿美元融资",
+    "opensource": 1,
+    "opensource_highlight": "OpenClaw v2026.2.22",
+    "security": 0,
+    "security_highlight": "-"
+  },
+  "sources_used": ["github.com/openclaw", "anthropic.com"]
+}
