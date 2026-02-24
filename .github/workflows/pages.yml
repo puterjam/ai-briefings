@@ -2,9 +2,7 @@ name: Deploy AI Briefings to Pages
 
 on:
   push:
-    branches: [main, master]
-    paths:
-      - 'briefings/**'
+    branches: [master, main]
   workflow_dispatch:
 
 permissions:
@@ -23,11 +21,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true  # Auto-enable Pages if not already enabled
-      
       - name: Build static site
         run: |
           mkdir -p _site
@@ -41,31 +34,23 @@ jobs:
               <meta charset="UTF-8">
               <title>AI Daily Briefing</title>
               <style>
-                  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+                  body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
                          max-width: 900px; margin: 0 auto; padding: 20px; line-height: 1.6; }
                   h1 { color: #333; border-bottom: 2px solid #0066cc; padding-bottom: 10px; }
-                  h2 { color: #555; margin-top: 30px; }
                   table { width: 100%; border-collapse: collapse; margin: 20px 0; }
                   th, td { text-align: left; padding: 12px; border-bottom: 1px solid #ddd; }
-                  th { background: #f5f5f5; font-weight: 600; }
+                  th { background: #f5f5f5; }
                   a { color: #0066cc; text-decoration: none; }
                   a:hover { text-decoration: underline; }
-                  .stats { background: #f9f9f9; padding: 15px; border-radius: 8px; margin: 20px 0; }
                   .update-time { color: #666; font-size: 0.9em; margin-top: 30px; }
               </style>
           </head>
           <body>
               <h1>🤖 AI Daily Briefing</h1>
-              <p>每日 AI 动态简报归档 - 由 ai-daily-briefing skill 自动生成</p>
+              <p>每日 AI 动态简报归档</p>
+              <table>
+                  <tr><th>日期</th><th>链接</th></tr>
           EOF
-          
-          # Add stats
-          count=$(ls -1 _site/*.md 2>/dev/null | wc -l)
-          echo "<div class='stats'>📊 共收录 <strong>$count</strong> 篇简报</div>" >> _site/index.html
-          
-          # Add table
-          echo "<h2>📅 简报列表</h2>" >> _site/index.html
-          echo "<table><tr><th>日期</th><th>链接</th></tr>" >> _site/index.html
           
           for f in $(ls -1 _site/*.md 2>/dev/null | sort -r | head -50); do
               date=$(basename $f .md)
@@ -97,5 +82,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          preview: false
